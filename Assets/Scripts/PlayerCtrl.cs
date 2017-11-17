@@ -137,7 +137,8 @@ void StopMovingHorizontal() {
 
   void OnTriggerEnter2D(Collider2D other) {
 		if (other.gameObject.CompareTag("Coin")){
-			Destroy(other.gameObject);
+			SFXManager.instance.ShowCoinParticles(other.gameObject);
+            Destroy(other.gameObject);
 		}
 	}
 
