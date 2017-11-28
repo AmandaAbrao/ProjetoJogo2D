@@ -13,10 +13,12 @@ public class MonsterCtrl : MonoBehaviour {
 		sr = GetComponent<SpriteRenderer>();
 	}
 	
-	// Update is called once per frame
 	void Update () {
+		if (transform.position.y < GM.instance.yMinLive) {
+			Destroy(gameObject);
+		}
+
 		Move();
-		
 	}
 
 	void Move() {
