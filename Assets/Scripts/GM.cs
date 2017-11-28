@@ -14,6 +14,12 @@ public class GM : MonoBehaviour {
 
     public GameObject playerPrefab; 
 
+
+    public float maxTime = 120f;
+    bool timerOn = true;
+    float timeLeft;
+
+
     public UI ui;
 
     GameData data = new GameData();
@@ -33,6 +39,9 @@ public class GM : MonoBehaviour {
         if (player == null){
             RespawnPlayer();
         }
+
+        timeLeft = maxTime;
+
     }
     
     void Update () {
@@ -43,12 +52,24 @@ public class GM : MonoBehaviour {
 			}
 		}
 
+        UpdateTimer();
         DisplayHudData();
 
     }
 
+    void UpdateTimer() {
+        if (timerOn) {
+            timeLeft = timeLeft - Time.deltaTime;
+            if (timeLeft <= 0f) {
+                timeLeft = 0;
+                ExpirePlayer();
+            }
+        }
+    }
+
     void DisplayHudData() {
         ui.hud.txtCoinCount.text = "x " + data.coinCount;
+        ui.hud.txtTimer.text = "Timer: " + timeLeft.ToString("F1");
     }
 
     public void IncrementCoinCount() {
@@ -69,4 +90,19 @@ public class GM : MonoBehaviour {
 			Invoke("RespawnPlayer", timeToRespawn);
 		}
 	}
+
+    public void ExpirePlayer() {
+		if (player != null){
+			Destroy(player.gameObject);
+		}
+        GameOver();
+	}
+
+    void GameOver() {
+        timerOn = false;
+        ui.gameOver.txtCoinCount.text = "Coins: " + data.coinCount;
+        ui.gameOver.txtTimer.text = "Timer: " + timeLeft.ToString("F1");
+        ui.gameOver.gameOverPanel.SetActive(true);
+    }
+
 }
